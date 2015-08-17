@@ -1,31 +1,56 @@
-/* The dragging code for '.draggable' from the demo above
-   * applies to this demo as well so it doesn't have to be repeated. */
-// target elements with the "draggable" class
-interact('.draggable')
-  .draggable({
-    // enable inertial throwing
-    inertia: true,
-    // keep the element within the area of it's parent
-    restrict: {
-      restriction: "parent",
-      endOnly: true,
-      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+interact(".draggable").draggable({
+    onmove:dragMoveListener,
+    snap: {
+        targets: [],
+        range: Infinity,
+        relativePoints: [ {x: 0.5, y: 0.5} ],
+        endOnly: true
     },
+    onstart: function (event) {
+        var rect = interact.getElementRect(event.target);
+        var startPos = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+        };
 
-    // call this function on every dragmove event
-    onmove: dragMoveListener,
-    // call this function on every dragend event
+        event.target.setAttribute('data-start-x', startPos.x);
+        event.target.setAttribute('data-start-y', startPos.y);
+
+        event.interactable.draggable({
+            snap: {
+                targets: [ startPos ]
+            }
+        });
+    },
     onend: function (event) {
-      var textEl = event.target.querySelector('p');
-
-      textEl && (textEl.textContent =
-        'moved a distance of '
-        + (Math.sqrt(event.dx * event.dx +
-                     event.dy * event.dy)|0) + 'px');
+        // event.target.classList.remove('getting-dragged');
     }
-  });
+});
 
-  function dragMoveListener (event) {
+interact(".drop").dropzone({ 
+    overlap: 'center',
+    accept: '.draggable',
+    ondropactivate: function (event) {
+        // event.target.classList.add('can-drop');
+    },
+    ondragenter: function (event) {
+        var dragElement = event.relatedTarget,
+            dropRect = interact.getElementRect(event.target),
+            dropCenter = {
+                x: dropRect.left + dropRect.width / 2,
+                y: dropRect.top + dropRect.height / 2
+            };
+        event.draggable.draggable({
+            snap: {
+                targets: [ dropCenter ]
+            }
+        });
+    },
+    ondragleave: function (event) {},
+    ondropdeactivate: function (event) {}
+});
+
+function dragMoveListener (event) {
     var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
         x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
@@ -39,44 +64,5 @@ interact('.draggable')
     // update the posiion attributes
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
+    //target.classList.add('getting-dragged');
   }
-
-  // this is used later in the resizing demo
-  window.dragMoveListener = dragMoveListener;
-  // enable draggables to be dropped into this
-  interact('.dropzone').dropzone({
-    // only accept elements matching this CSS selector
-  //  accept: '#yes-drop',
-    // Require a 75% element overlap for a drop to be possible
-    overlap: 0.75,
-
-    // listen for drop related events:
-
-    ondropactivate: function (event) {
-      // add active dropzone feedback
-      event.target.classList.add('drop-active');
-    },
-    ondragenter: function (event) {
-      var draggableElement = event.relatedTarget,
-          dropzoneElement = event.target;
-
-      // feedback the possibility of a drop
-      dropzoneElement.classList.add('drop-target');
-      draggableElement.classList.add('can-drop');
-      draggableElement.textContent = 'Dragged in';
-    },
-    ondragleave: function (event) {
-      // remove the drop feedback style
-      event.target.classList.remove('drop-target');
-      event.relatedTarget.classList.remove('can-drop');
-      event.relatedTarget.textContent = 'Dragged out';
-    },
-    ondrop: function (event) {
-      event.relatedTarget.textContent = 'Dropped';
-    },
-    ondropdeactivate: function (event) {
-      // remove active dropzone feedback
-      event.target.classList.remove('drop-active');
-      event.target.classList.remove('drop-target');
-    }
-  });

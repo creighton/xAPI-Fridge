@@ -1,39 +1,41 @@
-.dropzone {
-      background-color: #ccc;
-      border: dashed 4px transparent;
-      border-radius: 4px;
-      margin: 10px auto 30px;
-      padding: 10px;
-      width: 80%;
-      transition: background-color 0.3s;
-    }
+.block {
+/*
+  width: 25%;
+  height: 100%;
+*/
+  min-height: 6.5em;
+  margin: 10%;
 
-    .drop-active {
-      border-color: #aaa;
-    }
+  background-color: #29e;
+  color: white;
 
-    .drop-target {
-      background-color: #29e;
-      border-color: #fff;
-      border-style: solid;
-    }
+  border-radius: 0.75em;
+  padding: 4%;
 
-    .drag-drop {
-      display: inline-block;
-      min-width: 40px;
-      padding: 2em 0.5em;
+  -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+}
 
-      color: #fff;
-      background-color: #29e;
-      border: solid 2px #fff;
+#drag-me::before {
+  content: "#" attr(id);
+  font-weight: bold;
+}
 
-      -webkit-transform: translate(0px, 0px);
-              transform: translate(0px, 0px);
+.top-drop {
+    background-color: azure;
+    height: 10em;
+    border: solid black 1px;
+}
 
-      transition: background-color 0.3s;
-    }
+.drop {
+    background-color: burlywood;
+    height: 10em;
+    border: solid black 1px;
+}
 
-    .drag-drop.can-drop {
-      color: #000;
-      background-color: #4e4;
-    }
+.holder {
+    background-color: burlywood;
+    height: 10em;
+    border: solid black 1px;
+    margin-top: 10em;
+}
