@@ -45,6 +45,10 @@ interact(".drop").dropzone({
                 targets: [ dropCenter ]
             }
         });
+        if ( dropCenter.x != parseFloat(event.relatedTarget.getAttribute('data-start-x')) 
+            && dropCenter.y != parseFloat(event.relatedTarget.getAttribute('data-start-y')) ) {
+            $(event.target).addClass('hovery');
+        }
     },
     ondragleave: function (event) {
         var startPos = {
@@ -56,6 +60,7 @@ interact(".drop").dropzone({
                 targets: [startPos]
             }
         });
+        $(event.target).removeClass('hovery');
     },
     ondropdeactivate: function (event) {},
     ondrop: function (event) {
@@ -66,6 +71,8 @@ interact(".drop").dropzone({
         item.removeAttr('data-x');
         item.removeAttr('data-y');
         item.removeAttr('style');
+        $(event.target).removeClass('hovery');
+        Meteor.call('addItem', 'foo');
     }
 });
 
