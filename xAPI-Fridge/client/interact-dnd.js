@@ -46,8 +46,27 @@ interact(".drop").dropzone({
             }
         });
     },
-    ondragleave: function (event) {},
-    ondropdeactivate: function (event) {}
+    ondragleave: function (event) {
+        var startPos = {
+            x: parseFloat(event.relatedTarget.getAttribute('data-start-x')),
+            y: parseFloat(event.relatedTarget.getAttribute('data-start-y'))
+        };
+        event.draggable.draggable({
+            snap: {
+                targets: [startPos]
+            }
+        });
+    },
+    ondropdeactivate: function (event) {},
+    ondrop: function (event) {
+        var item = $(event.relatedTarget).detach();
+        item.appendTo(event.target);
+        item.removeAttr('data-start-x');
+        item.removeAttr('data-start-y');
+        item.removeAttr('data-x');
+        item.removeAttr('data-y');
+        item.removeAttr('style');
+    }
 });
 
 function dragMoveListener (event) {

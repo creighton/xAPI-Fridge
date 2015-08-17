@@ -25,12 +25,14 @@
     background-color: azure;
     height: 10em;
     border: solid black 1px;
+    z-index: 0;
 }
 
 .drop {
     background-color: burlywood;
     height: 10em;
     border: solid black 1px;
+    z-index: 0;
 }
 
 .holder {
@@ -38,4 +40,5 @@
     height: 10em;
     border: solid black 1px;
     margin-top: 10em;
+    z-index: 0;
 }
